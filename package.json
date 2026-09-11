@@ -1,0 +1,28 @@
+{
+  "name": "github-org-app-installer",
+  "version": "1.0.0",
+  "description": "A Probot app to install an app in your enterprise organizations",
+  "main": "src/lambda.js",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "install-all": "node bin/manage-installations.js install-all",
+    "uninstall-all": "node bin/manage-installations.js uninstall-all"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://localhost:26831/robandpdx/github-org-app-installer"
+  },
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@octokit/auth-app": "^8.3.1",
+    "@octokit/request": "^10.0.16",
+    "probot": "^14.3.2"
+  },
+  "devDependencies": {
+    "jest": "^30.5.1"
+  },
+  "bin": {
+    "github-org-app-installer": "bin/manage-installations.js"
+  }
+}

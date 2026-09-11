@@ -1,0 +1,75 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Probot Lambda that installs GitHub Apps into new enterprise organizations.
+
+Parameters:
+  GitHubEnterpriseSlug:
+    Type: String
+    Description: Slug of the GitHub Enterprise account that owns the organizations.
+  InstallerAppId:
+    Type: Number
+    Description: App ID of the enterprise-level installer GitHub App.
+  InstallerAppInstallationId:
+    Type: Number
+    Description: Enterprise installation ID for the installer GitHub App.
+  InstallerAppPrivateKey:
+    Type: String
+    NoEcho: true
+    Description: Private key for the installer GitHub App. Use escaped newlines or base64-encoded PEM content.
+  WebhookSecret:
+    Type: String
+    NoEcho: true
+    Description: Webhook secret configured on the enterprise-level installer GitHub App.
+  TargetAppClientIds:
+    Type: CommaDelimitedList
+    Description: One or more client IDs for organization-level GitHub Apps to install.
+  RepositorySelection:
+    Type: String
+    Default: all
+    AllowedValues:
+      - all
+      - selected
+      - none
+    Description: Repository access to grant to the target app installations.
+  SelectedRepositories:
+    Type: CommaDelimitedList
+    Default: ''
+    Description: Repository names to grant when RepositorySelection is selected.
+  GitHubApiBaseUrl:
+    Type: String
+    Default: https://api.github.com
+    Description: GitHub API base URL.
+
+Globals:
+  Function:
+    Runtime: nodejs20.x
+    Timeout: 30
+    MemorySize: 256
+    Architectures:
+      - x86_64
+
+Resources:
+  OrgCreatedInstallerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/lambda.handler
+      CodeUri: .
+      Description: Installs configured GitHub Apps when a GitHub Enterprise organization is created.
+      Environment:
+        Variables:
+          GITHUB_ENTERPRISE_SLUG: !Ref GitHubEnterpriseSlug
+          INSTALLER_APP_ID: !Ref InstallerAppId
+          INSTALLER_APP_INSTALLATION_ID: !Ref InstallerAppInstallationId
+          INSTALLER_APP_PRIVATE_KEY: !Ref InstallerAppPrivateKey
+          WEBHOOK_SECRET: !Ref WebhookSecret
+          TARGET_APP_CLIENT_IDS: !Join [',', !Ref TargetAppClientIds]
+          REPOSITORY_SELECTION: !Ref RepositorySelection
+          SELECTED_REPOSITORIES: !Join [',', !Ref SelectedRepositories]
+          GITHUB_API_BASE_URL: !Ref GitHubApiBaseUrl
+      FunctionUrlConfig:
+        AuthType: NONE
+
+Outputs:
+  WebhookUrl:
+    Description: Configure this URL as the enterprise-level GitHub App webhook URL.
+    Value: !GetAtt OrgCreatedInstallerFunctionUrl.FunctionUrl
