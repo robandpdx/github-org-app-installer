@@ -24,5 +24,11 @@
   },
   "bin": {
     "github-org-app-installer": "bin/manage-installations.js"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/.aws-sam/"
+    ]
   }
 }
