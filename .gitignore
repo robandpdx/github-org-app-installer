@@ -144,3 +144,6 @@ vite.config.ts.timestamp-*
 
 # AWS SAM build output
 .aws-sam/
+
+.envrc
+samconfig.toml
