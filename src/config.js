@@ -51,7 +51,7 @@ export function loadConfig(env = process.env) {
     appId: Number(required('INSTALLER_APP_ID', env)),
     installationId: Number(required('INSTALLER_APP_INSTALLATION_ID', env)),
     privateKey: normalizePrivateKey(required('INSTALLER_APP_PRIVATE_KEY', env)),
-    webhookSecret: required('WEBHOOK_SECRET', env),
+    webhookSecret: String(env.WEBHOOK_SECRET ?? '').trim(),
     apiBaseUrl: env.GITHUB_API_BASE_URL || 'https://api.github.com',
     targetApps: parseList(required('TARGET_APP_CLIENT_IDS', env)).map((clientId) => ({ clientId })),
     repositorySelection,

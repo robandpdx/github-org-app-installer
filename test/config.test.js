@@ -24,6 +24,13 @@ test('requires repositories for selected repository installations', () => {
   expect(() => loadConfig({ ...baseEnv, REPOSITORY_SELECTION: 'selected' })).toThrow('SELECTED_REPOSITORIES');
 });
 
+test('allows the webhook secret to be omitted', () => {
+  const { WEBHOOK_SECRET, ...envWithoutWebhookSecret } = baseEnv;
+
+  expect(loadConfig(envWithoutWebhookSecret).webhookSecret).toBe('');
+  expect(loadConfig({ ...baseEnv, WEBHOOK_SECRET: '  ' }).webhookSecret).toBe('');
+});
+
 test('normalizes base64 private keys', () => {
   const pem = '-----BEGIN PRIVATE KEY-----\nabc\n-----END PRIVATE KEY-----';
   expect(normalizePrivateKey(Buffer.from(pem).toString('base64'))).toBe(pem);

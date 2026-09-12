@@ -18,8 +18,8 @@ Parameters:
     Description: Private key for the installer GitHub App. Use escaped newlines or base64-encoded PEM content.
   WebhookSecret:
     Type: String
-    NoEcho: true
-    Description: Webhook secret configured on the enterprise-level installer GitHub App.
+    Default: ''
+    Description: Optional webhook secret for signature verification. Leave blank to accept unsigned webhooks.
   TargetAppClientIds:
     Type: CommaDelimitedList
     Description: One or more client IDs for organization-level GitHub Apps to install.
@@ -71,5 +71,5 @@ Resources:
 
 Outputs:
   WebhookUrl:
-    Description: Configure this URL as the enterprise-level GitHub App webhook URL.
+    Description: Configure this URL as the global enterprise webhook payload URL.
     Value: !GetAtt OrgCreatedInstallerFunctionUrl.FunctionUrl

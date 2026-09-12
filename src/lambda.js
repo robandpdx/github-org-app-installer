@@ -17,6 +17,10 @@ export function rawBodyFromEvent(event) {
 }
 
 export function verifySignature(secret, payload, signature) {
+  if (!secret) {
+    return true;
+  }
+
   if (!signature || !signature.startsWith('sha256=')) {
     return false;
   }
@@ -33,7 +37,7 @@ function getProbot(config) {
     probot = new Probot({
       appId: config.appId,
       privateKey: config.privateKey,
-      secret: config.webhookSecret,
+      secret: config.webhookSecret || undefined,
     });
     probot.load(app);
   }
