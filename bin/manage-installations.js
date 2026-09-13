@@ -33,7 +33,12 @@ async function main() {
   const request = createInstallerRequest(config);
   const operation = command === 'install-all' ? installAppsInEnterprise : uninstallAppsInEnterprise;
   const results = await operation({ request, config, org });
-  console.log(JSON.stringify(results, null, 2));
+  const resultKey = command === 'install-all' ? 'installations' : 'uninstalled';
+  const installationCount = results.reduce((total, result) => total + result[resultKey].length, 0);
+  const action = command === 'install-all' ? 'installed' : 'uninstalled';
+  const organizationLabel = results.length === 1 ? 'organization' : 'organizations';
+  const appLabel = installationCount === 1 ? 'app' : 'apps';
+  console.log(`Processed ${results.length} ${organizationLabel}; ${installationCount} ${appLabel} ${action}.`);
 }
 
 main().catch((error) => {
