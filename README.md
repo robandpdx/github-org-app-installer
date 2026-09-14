@@ -1,6 +1,6 @@
 # github-org-app-installer
 
-A Probot app packaged as an AWS SAM application that installs one or more enterprise-owned GitHub Apps when an organization administrator is added.
+A Probot app packaged as an AWS SAM application that installs one or more enterprise-owned GitHub Apps when an organization administrator is added. There is no way to capture organization creation events outsite of audit log streaming. However, upon create of an organization, an admin user is immediately added to the organization. So essentially, listening to the `organization.member_added` event is the next best thing to the non-existent `organization.create` event.  
 
 ## What it does
 
